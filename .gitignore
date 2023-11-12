@@ -3,3 +3,9 @@ scrap
 *.gzip
 *.csv.gz
 *summary*.txt
+mimiciv/
+data/
+.ipynb_checkpoints/
+.DS_Store
+model/.ipynb_checkpoints
+.ipynb_checkpoints
