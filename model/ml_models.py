@@ -101,24 +101,33 @@ class ML_models():
                     concat_cols.extend(cols_t)
             print('train_hids',len(train_hids))
             X_train,Y_train=self.getXY(train_hids,labels,concat_cols)
-            #encoding categorical
-            gen_encoder = LabelEncoder()
-            eth_encoder = LabelEncoder()
-            ins_encoder = LabelEncoder()
-            age_encoder = LabelEncoder()
-            gen_encoder.fit(X_train['gender'])
-            eth_encoder.fit(X_train['ethnicity'])
-            ins_encoder.fit(X_train['insurance'])
-            #age_encoder.fit(X_train['Age'])
-            X_train['gender']=gen_encoder.transform(X_train['gender'])
-            X_train['ethnicity']=eth_encoder.transform(X_train['ethnicity'])
-            X_train['insurance']=ins_encoder.transform(X_train['insurance'])
-            #X_train['Age']=age_encoder.transform(X_train['Age'])
 
-            print(X_train.shape)
-            print(Y_train.shape)
-            print('test_hids',len(test_hids))
+            X_train.to_csv('data/NEW_X_train.csv', index = False)
+            Y_train.to_csv('data/NEW_Y_train.csv', index = False)
+            print('Saved Train Files')
+            
+            #encoding categorical
+            # gen_encoder = LabelEncoder()
+            # eth_encoder = LabelEncoder()
+            # ins_encoder = LabelEncoder()
+            # age_encoder = LabelEncoder()
+            # gen_encoder.fit(X_train['gender'])
+            # eth_encoder.fit(X_train['ethnicity'])
+            # ins_encoder.fit(X_train['insurance'])
+            # #age_encoder.fit(X_train['Age'])
+            # X_train['gender']=gen_encoder.transform(X_train['gender'])
+            # X_train['ethnicity']=eth_encoder.transform(X_train['ethnicity'])
+            # X_train['insurance']=ins_encoder.transform(X_train['insurance'])
+            # #X_train['Age']=age_encoder.transform(X_train['Age'])
+
+            # print(X_train.shape)
+            # print(Y_train.shape)
+            # print('test_hids',len(test_hids))
             X_test,Y_test=self.getXY(test_hids,labels,concat_cols)
+            X_test.to_csv('data/NEW_X_test.csv', index = False)
+            Y_test.to_csv('data/NEW_Y_test.csv', index = False)
+            print('Saved Test Filess')
+            
             self.test_data=X_test.copy(deep=True)
             X_test['gender']=gen_encoder.transform(X_test['gender'])
             X_test['ethnicity']=eth_encoder.transform(X_test['ethnicity'])
@@ -130,6 +139,7 @@ class ML_models():
             print(Y_test.shape)
             #print("just before training")
             #print(X_test.head())
+
             self.train_model(X_train,Y_train,X_test,Y_test)
     
     def train_model(self,X_train,Y_train,X_test,Y_test):
@@ -233,8 +243,9 @@ class ML_models():
 #             print(dyn.shape)
 #             print(dyn_df.shape)
 #             print(dyn_df.head())
-            stat=pd.read_csv('./data/csv/'+str(sample)+'/static.csv',header=[0,1])
-            stat=stat['COND']
+            stat=pd.read_csv('./data/csv/'+str(sample)+'/static.csv',header=0)
+            #print(stat)
+            #stat=stat['COND']
 #             print(stat.shape)
 #             print(stat.head())
             demo=pd.read_csv('./data/csv/'+str(sample)+'/demo.csv',header=0)
@@ -251,6 +262,7 @@ class ML_models():
                 y_df=pd.concat([y_df,y],axis=0)
 #             print("X_df",X_df.shape)
 #             print("y_df",y_df.shape)
+        X_df = X_df.loc[:,~X_df.columns.duplicated()].copy()
         print("X_df",X_df.shape)
         print("y_df",y_df.shape)
         return X_df ,y_df
